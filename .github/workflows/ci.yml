@@ -1,0 +1,76 @@
+name: build
+on:
+- push
+
+jobs:
+  build-linux:
+    name: Build (Linux)
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: Install musl-tools
+        run: sudo apt install -y musl-tools
+      - name: Add target
+        run: rustup target add x86_64-unknown-linux-musl
+      - name: Build
+        run: cd http-proxy-unwrap-cli && cargo build --release --target x86_64-unknown-linux-musl
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: exe-linux
+          path: http-proxy-unwrap-cli/target/x86_64-unknown-linux-musl/release/http-proxy-unwrap-cli
+  build-macos:
+    name: Build (macOS)
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: Build
+        run: cd http-proxy-unwrap-cli && cargo build --release
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: exe-macos
+          path: http-proxy-unwrap-cli/target/release/http-proxy-unwrap-cli
+  release:
+    name: Create release
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-20.04
+    needs:
+      - build-linux
+      - build-macos
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: exe-linux
+          path: ./dist/exe-linux
+      - uses: actions/download-artifact@v2
+        with:
+          name: exe-macos
+          path: ./dist/exe-macos
+      - name: Cleanup
+        run: |
+          cd dist
+          mkdir packages
+          cd exe-linux && tar -czvf ../packages/unproxy_linux.tar.gz . && cd ..
+          cd exe-macos && tar -czvf ../packages/unproxy_macos.tar.gz . && cd ..
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            dist/packages/unproxy_linux.tar.gz
+            dist/packages/unproxy_macos.tar.gz

@@ -2,6 +2,10 @@
 name = "unproxy"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
+authors = ["Heyang Zhou <heyang.zhou@icloud.com>"]
+description = "Map TCP services behind an HTTP(S) proxy to local ports."
+repository = "https://github.com/losfair/unproxy"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,5 +1,5 @@
 [package]
-name = "http-proxy-unwrap-cli"
+name = "unproxy-cli"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 anyhow = "1"
-http-proxy-unwrap = { path = ".." }
+unproxy = { path = ".." }
 structopt = "0.3.26"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3.15", default-features = false, features = ["env-filter", "json", "std", "fmt"] }

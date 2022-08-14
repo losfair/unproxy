@@ -1,2 +1,2 @@
-# http-proxy-unwrap
+# unproxy
 Unwrap TCP services behind an HTTP(S) proxy.

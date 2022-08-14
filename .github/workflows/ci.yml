@@ -19,12 +19,12 @@ jobs:
       - name: Add target
         run: rustup target add x86_64-unknown-linux-musl
       - name: Build
-        run: cd http-proxy-unwrap-cli && cargo build --release --target x86_64-unknown-linux-musl
+        run: cd unproxy-cli && cargo build --release --target x86_64-unknown-linux-musl
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
           name: exe-linux
-          path: http-proxy-unwrap-cli/target/x86_64-unknown-linux-musl/release/http-proxy-unwrap-cli
+          path: unproxy-cli/target/x86_64-unknown-linux-musl/release/unproxy-cli
   build-macos:
     name: Build (macOS)
     runs-on: macos-10.15
@@ -37,12 +37,12 @@ jobs:
           profile: minimal
           toolchain: stable
       - name: Build
-        run: cd http-proxy-unwrap-cli && cargo build --release
+        run: cd unproxy-cli && cargo build --release
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
           name: exe-macos
-          path: http-proxy-unwrap-cli/target/release/http-proxy-unwrap-cli
+          path: unproxy-cli/target/release/unproxy-cli
   release:
     name: Create release
     if: startsWith(github.ref, 'refs/tags/')

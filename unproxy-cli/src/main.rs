@@ -4,7 +4,7 @@ use tokio::net::lookup_host;
 use tracing_subscriber::{fmt::SubscriberBuilder, EnvFilter};
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "http-proxy-unwrap-cli", about = "HTTP Proxy Unwrap")]
+#[structopt(name = "unproxy-cli", about = "HTTP Proxy Unwrap")]
 struct Opt {
     /// HTTP/HTTPS URL of the proxy to use. The path is ignored.
     #[structopt(long, short = "p")]
@@ -49,7 +49,7 @@ async fn main() -> Result<()> {
         let proxy = opt.proxy.clone();
         tracing::info!(client = %local_client_addr, "new connection");
         tokio::spawn(async move {
-            match http_proxy_unwrap::connect(&proxy, &remote.ip().to_string(), remote.port()).await
+            match unproxy::connect(&proxy, &remote.ip().to_string(), remote.port()).await
             {
                 Ok(mut proxy_stream) => {
                     let _ = tokio::io::copy_bidirectional(&mut proxy_stream, &mut conn).await;
